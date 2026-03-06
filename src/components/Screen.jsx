@@ -13,7 +13,7 @@ export default function Screen() {
         <div className="flex flex-col gap-4">
           <TopBar
             bg="yellow"
-            left="Hi Maria!"
+            left="Hi Maria, Annie, Kaitlyn and Noah!"
             right={
               <span className="text-black text-4xl font-normal font-['Inter',sans-serif] whitespace-nowrap">
                 Hello world
