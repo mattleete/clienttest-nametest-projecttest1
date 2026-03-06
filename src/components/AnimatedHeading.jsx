@@ -1,30 +1,40 @@
 import { motion, useAnimation } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TEXT = 'HELLO WORLD';
 
-function TumblingLetter({ char, scatterX, scatterY, scatterRotate, scatterDelay, trigger }) {
+function randomScatter() {
+  return {
+    x: (Math.random() - 0.5) * 1200,
+    y: (Math.random() - 0.5) * 750,
+    rotate: (Math.random() - 0.5) * 1080,
+    duration: 2.5 + Math.random() * 1,   // 2.5–3.5s per letter
+    delay: Math.random() * 0.3,          // 0–0.3s random stagger
+  };
+}
+
+function TumblingLetter({ char, trigger }) {
   const controls = useAnimation();
 
   useEffect(() => {
     if (trigger === 0) return;
 
+    const { x, y, rotate, duration, delay } = randomScatter();
     let active = true;
+
     const run = async () => {
-      // Scatter out
       await controls.start({
-        x: scatterX,
-        y: scatterY,
-        rotate: scatterRotate,
-        transition: { duration: 0.6, ease: [0.4, 0, 1, 1], delay: scatterDelay },
+        x,
+        y,
+        rotate,
+        transition: { duration, ease: 'easeOut', delay },
       });
-      // Pull back in
       if (active) {
         await controls.start({
           x: 0,
           y: 0,
           rotate: 0,
-          transition: { duration: 0.9, ease: [0, 0, 0.2, 1] },
+          transition: { duration: 1.5, ease: 'easeIn' },
         });
       }
     };
@@ -44,34 +54,15 @@ function TumblingLetter({ char, scatterX, scatterY, scatterRotate, scatterDelay,
 export default function AnimatedHeading() {
   const [trigger, setTrigger] = useState(1);
 
-  // Generate stable random scatter targets once
-  const letterData = useMemo(() =>
-    TEXT.split('').map(() => ({
-      x: (Math.random() - 0.5) * 800,
-      y: (Math.random() - 0.5) * 500,
-      rotate: (Math.random() - 0.5) * 720,
-    })),
-    []
-  );
-
-  // Repeat every 10 seconds
   useEffect(() => {
-    const id = setInterval(() => setTrigger(t => t + 1), 10000);
+    const id = setInterval(() => setTrigger(t => t + 1), 8000);
     return () => clearInterval(id);
   }, []);
 
   return (
     <h1 className="text-white text-8xl font-normal font-['Inter',sans-serif] whitespace-nowrap tracking-wide">
       {TEXT.split('').map((char, i) => (
-        <TumblingLetter
-          key={i}
-          char={char}
-          scatterX={letterData[i].x}
-          scatterY={letterData[i].y}
-          scatterRotate={letterData[i].rotate}
-          scatterDelay={i * 0.05}
-          trigger={trigger}
-        />
+        <TumblingLetter key={i} char={char} trigger={trigger} />
       ))}
     </h1>
   );
