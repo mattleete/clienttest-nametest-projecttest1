@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import TopBar from './TopBar';
 import DotGroup from './DotGroup';
 import AnimateCard from './AnimateCard';
+import AnimatedHeading from './AnimatedHeading';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -55,9 +56,7 @@ export default function Screen() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <h1 className="text-white text-8xl font-normal font-['Inter',sans-serif] whitespace-nowrap tracking-wide">
-            HELLO WORLD
-          </h1>
+          <AnimatedHeading />
         </motion.div>
 
         {/* Bottom cards */}
